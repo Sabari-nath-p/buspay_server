@@ -3,6 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { SeederModule } from './seeder/seeder.module';
+import { OtpModule } from './otp/otp.module';
+import { RoleModule } from './role/role.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +22,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: false,
       autoLoadEntities: true,
     }),
+    UserModule,
+    SeederModule,
+    OtpModule,
+    RoleModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
