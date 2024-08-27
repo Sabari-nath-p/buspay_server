@@ -1,3 +1,4 @@
+import { Route } from 'src/route/entities/route.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Entity,
@@ -7,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('bus')
@@ -29,6 +31,9 @@ export class Bus {
   })
   @JoinColumn({ name: 'owner_id' })
   owner: User | null;
+
+  @OneToMany(() => Route, (route) => route.bus)
+  routes: Route[];
 
   @Column({ type: 'int' })
   no_trips_per_day: number;

@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateBusTable1724782796905 implements MigrationInterface {
+export class CreateRouteTable1724783273751 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'bus',
+        name: 'route',
         columns: [
           {
             name: 'id',
@@ -24,18 +24,13 @@ export class CreateBusTable1724782796905 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'bus_no',
+            name: 'bus_id',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'timings',
             type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'owner_id',
-            type: 'int',
-            isNullable: true,
-          },
-          {
-            name: 'no_trips_per_day',
-            type: 'int',
             isNullable: false,
           },
           {
@@ -56,22 +51,22 @@ export class CreateBusTable1724782796905 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'bus',
+      'route',
       new TableForeignKey({
-        columnNames: ['owner_id'],
+        columnNames: ['bus_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'user',
-        onDelete: 'SET NULL',
+        referencedTableName: 'bus',
+        onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('bus');
+    const table = await queryRunner.getTable('route');
     const foreignKey = table.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('owner_id') !== -1,
+      (fk) => fk.columnNames.indexOf('bus_id') !== -1,
     );
-    await queryRunner.dropForeignKey('bus', foreignKey);
-    await queryRunner.dropTable('bus');
+    await queryRunner.dropForeignKey('route', foreignKey);
+    await queryRunner.dropTable('route');
   }
 }

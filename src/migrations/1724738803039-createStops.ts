@@ -8,7 +8,7 @@ export class CreateStops1724738803039 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'bigint',
+            type: 'int',
             isPrimary: true,
             isGenerated: true,
             generationStrategy: 'increment',

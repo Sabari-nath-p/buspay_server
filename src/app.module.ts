@@ -10,6 +10,7 @@ import { RoleModule } from './role/role.module';
 import { AuthModule } from './auth/auth.module';
 import { StopModule } from './stop/stop.module';
 import { BusModule } from './bus/bus.module';
+import { RouteModule } from './route/route.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BusModule } from './bus/bus.module';
     AuthModule,
     StopModule,
     BusModule,
+    RouteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
