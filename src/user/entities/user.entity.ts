@@ -8,8 +8,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Bus } from 'src/bus/entities/bus.entity';
 
 export enum UserStatusEnum {
   ACTIVE = 'active',
@@ -79,6 +81,9 @@ export class User {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
   createdBy: User | null;
+
+  @OneToMany(() => Bus, (bus) => bus.owner)
+  buses: Bus[];
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

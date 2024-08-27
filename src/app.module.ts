@@ -9,6 +9,7 @@ import { OtpModule } from './otp/otp.module';
 import { RoleModule } from './role/role.module';
 import { AuthModule } from './auth/auth.module';
 import { StopModule } from './stop/stop.module';
+import { BusModule } from './bus/bus.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { StopModule } from './stop/stop.module';
     RoleModule,
     AuthModule,
     StopModule,
+    BusModule,
   ],
   controllers: [AppController],
   providers: [AppService],
