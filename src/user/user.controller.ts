@@ -14,16 +14,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
+import { RoleService } from 'src/role/role.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly rolesService: RoleService,
+  ) {}
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('super_admin')
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const role = await this.rolesService.findRoleByName(createUserDto.role);
+    delete createUserDto.role;
+    return this.userService.create({ ...createUserDto, role });
   }
 
   @Get()

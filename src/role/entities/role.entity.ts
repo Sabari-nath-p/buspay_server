@@ -1,31 +1,14 @@
 import { User } from 'src/user/entities/user.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToOne,
-  JoinColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
-@Entity({ name: 'role' })
+@Entity('role')
 export class Role {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   name: string;
- 
-  @ManyToMany(() => User, (user) => user.roles)
-  @JoinTable({
-    name: 'user_roles',
-    joinColumn: {
-      name: 'role_id',
-    },
-    inverseJoinColumn: {
-      name: 'user_id',
-    },
-  })
+
+  @OneToMany(() => User, (user) => user.role)
   users: User[];
 }

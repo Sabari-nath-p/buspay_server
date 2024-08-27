@@ -4,6 +4,8 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { OtpModule } from 'src/otp/otp.module';
+import { RoleModule } from 'src/role/role.module';
+import { ResponseModule } from 'src/common/response/response.module';
 
 @Module({
   imports: [
@@ -11,12 +13,14 @@ import { OtpModule } from 'src/otp/otp.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
+    RoleModule,
     forwardRef(() => UserModule),
     OtpModule,
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
       signOptions: { expiresIn: '60s' },
     }),
+    ResponseModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],

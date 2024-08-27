@@ -29,11 +29,11 @@ export class RolesGuard implements CanActivate {
       const { sub } = request.user;
       const user = await this.userService.findOne(sub);
 
-      if (!user || !user.user_type) {
+      if (!user || !user.role.name) {
         throw new Error('User type not available');
       }
 
-      return requiredRoles.includes(user.user_type);
+      return requiredRoles.includes(user.role.name);
     } catch (error) {
       console.error(`RolesGuard error: ${error.message}`);
       return false;

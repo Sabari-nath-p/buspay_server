@@ -9,7 +9,7 @@ import {
 export class VerifyOtpDto {
   @IsNotEmpty()
   @IsInt()
-  userId: number;
+  user_id: number;
 
   @IsNotEmpty()
   @IsString()

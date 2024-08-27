@@ -5,11 +5,13 @@ import {
   forwardRef,
   BadRequestException,
   NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { OtpService } from '../otp/otp.service';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { ResponseService } from 'src/common/response/response.service';
 
 @Injectable()
 export class AuthService {
@@ -39,27 +41,21 @@ export class AuthService {
     }
     return {
       message: 'Login successful',
-      tokens: await this.GenerateTokens(user.id, user.name, user.user_type),
+      tokens: await this.GenerateTokens(user.id, user.name, user.role.name),
       user: user,
     };
   }
 
   async generateOtpForUser(
-    name: string,
     phone: string,
   ): Promise<{ message: string; data: any; success: boolean }> {
     let user = await this.usersService.findUserByPhone(phone);
     if (!user) {
-      if (!name) {
-        throw new BadRequestException(
-          `You have to provide field 'name' for new user`,
-        );
-      } else {
-        user = await this.usersService.createUser({ name, phone });
-      }
+      throw new NotFoundException('user not found');
     }
-    const otpSecret = this.otpService.generateSecret(); //user.otpSecret ||
+    const otpSecret = this.otpService.generateSecret();
     const otp = this.otpService.generateOtp(otpSecret);
+    //console.log(otpSecret);
     await this.usersService.updateUserOtpSecret(user, otpSecret);
     return {
       message: `OTP sent successfully to your mobile #${user.phone} #${otp} #${user.id}`, // Remove otp on production
@@ -70,17 +66,19 @@ export class AuthService {
 
   async verifyOtpForLogin(userId: number, otp: string): Promise<boolean> {
     const user = await this.usersService.findUserById(userId);
-    if (!user || user.user_type !== 'end_user') {
-      throw new BadRequestException('User not found');
-    }
     const isValidOtp = await this.otpService.validateOtp(otp, user.otp_secret);
-
+    if (!user.otp_secret) {
+      throw new ConflictException('generate OTP for this user first');
+    }
     if (isValidOtp) {
       const tokens = await this.GenerateTokens(
         user.id,
         user.name,
-        user.user_type,
+        user.role.name,
       );
+      user.otp_timestamp = new Date();
+      user.otp_secret = null;
+      const savedUser = await this.usersService.saveUser(user);
       return true;
     } else {
       return false;
@@ -91,8 +89,23 @@ export class AuthService {
     userId: number,
   ): Promise<{ message: string; data: any; success: boolean }> {
     const user = await this.usersService.findUserById(userId);
-    if (!user || user.user_type !== 'end_user') {
+    if (!user) {
       throw new BadRequestException('User not found');
+    }
+    if (!user.otp_secret) {
+      throw new ConflictException('generate OTP for this user first');
+    }
+    if (
+      user.otp_timestamp &&
+      user.otp_timestamp.getTime() > Date.now() - 300000
+    ) {
+      throw new ConflictException('OTP resent too quickly');
+    }
+    if (
+      user.otp_timestamp &&
+      user.otp_timestamp.getTime() < Date.now() - 600000
+    ) {
+      throw new ConflictException('OTP Timed Out');
     }
     const newOtp = this.otpService.regenerateOtp(user.otp_secret);
 

@@ -11,11 +11,10 @@ import {
   Min,
   IsInt,
 } from 'class-validator';
-import { UserType } from '../entities/user.entity';
 
 export class CreateUserDto {
   @IsIn(['super_admin', 'bus_owner', 'end_user', 'conductor'])
-  user_type: UserType;
+  role: string;
 
   @IsNotEmpty()
   name: string;

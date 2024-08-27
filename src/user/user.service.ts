@@ -7,9 +7,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserInterface } from './interface/create-user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User, UserStatusEnum } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { OtpService } from 'src/otp/otp.service';
+import { Role } from 'src/role/entities/role.entity';
+import { IsLongitude } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -18,8 +20,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     private readonly otpService: OtpService,
   ) {}
-  async create(createUserDto: CreateUserInterface) {
-    const userData = this.userRepository.create(createUserDto);
+  async create(CreateUserInterface: CreateUserInterface) {
+    const userData = this.userRepository.create(CreateUserInterface);
     return await this.userRepository.save(userData);
   }
 
@@ -30,6 +32,7 @@ export class UserService {
   async findOne(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
+      relations: ['role'],
     });
     if (!user) {
       throw new NotFoundException('user not found');
@@ -50,7 +53,10 @@ export class UserService {
     if (!email) {
       return null;
     }
-    return await this.userRepository.findOne({ where: { email } });
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: ['role'],
+    });
   }
 
   async findUserByPhone(phone: string): Promise<User | null> {
@@ -62,25 +68,43 @@ export class UserService {
   }
 
   async findUserById(id: number) {
-    return await this.userRepository.findOne({ where: { id } });
+    return await this.userRepository.findOne({
+      where: { id },
+      relations: ['role'],
+    });
   }
 
-  async createUser(data: { name: string; phone: string }): Promise<User> {
-    const otpSecret = this.otpService.generateSecret();
+  async saveUser(user: any) {
+    return await this.userRepository.save(user);
+  }
+
+  async createUser(data: {
+    name: string;
+    phone: string;
+    email: string;
+    lattitude: string;
+    longitude: string;
+    role: Role;
+  }): Promise<User> {
+    //    const otpSecret = this.otpService.generateSecret();
     const newUser: User = this.userRepository.create({
       name: data.name,
       phone: data.phone,
-      otp_secret: otpSecret,
+      email: data.email,
+      lattitude: data.lattitude ? data.lattitude : null,
+      longitude: data.longitude ? data.longitude : null,
+      role: data.role,
+      status: UserStatusEnum.PENDING,
     });
     const savedUser = await this.userRepository.save(newUser);
     return savedUser;
   }
 
-  async updateUserOtpSecret(user: any, otpSecret: string): Promise<void> {
+  async updateUserOtpSecret(user: User, otpSecret: string): Promise<void> {
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
-    user.otpSecret = otpSecret;
+    user.otp_secret = otpSecret;
     await this.userRepository.save(user);
   }
 }

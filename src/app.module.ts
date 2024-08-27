@@ -8,6 +8,7 @@ import { SeederModule } from './seeder/seeder.module';
 import { OtpModule } from './otp/otp.module';
 import { RoleModule } from './role/role.module';
 import { AuthModule } from './auth/auth.module';
+import { StopModule } from './stop/stop.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
     OtpModule,
     RoleModule,
     AuthModule,
+    StopModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
@@ -16,6 +16,9 @@ export class RoleService {
         name: name,
       },
     });
+    if (!role) {
+      throw new NotFoundException(`Role with name ${name} not found`);
+    }
     return role;
   }
 

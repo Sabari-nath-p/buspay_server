@@ -1,30 +1,22 @@
 import { Role } from 'src/role/entities/role.entity';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
+  PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
   BeforeInsert,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-export enum UserType {
-  SUPER_ADMIN = 'super_admin',
-  BUS_OWNER = 'bus_owner',
-  END_USER = 'end_user',
-  CONDUCTOR = 'conductor',
-}
-
-export enum UserStatus {
+export enum UserStatusEnum {
   ACTIVE = 'active',
   OFFLINE = 'offline',
   DEACTIVATED = 'deactivated',
   SUSPENDED = 'suspended',
+  PENDING = 'pending',
 }
 
 export function encodedPassword(rawPassword: string) {
@@ -37,32 +29,31 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar' })
   name: string;
 
   @Column({ type: 'varchar', nullable: true })
   phone: string | null;
 
-  @Column({
-    type: 'enum',
-    enum: UserType,
-    enumName: 'UserTypeEnum',
+  @ManyToOne(() => Role, (role) => role.users, {
+    nullable: false,
+    onDelete: 'CASCADE',
   })
-  user_type: UserType;
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
 
   @Column({
     type: 'enum',
-    enum: UserStatus,
-    enumName: 'UserStatusEnum',
-    default: UserStatus.ACTIVE,
+    enum: UserStatusEnum,
+    default: UserStatusEnum.ACTIVE,
   })
-  status: UserStatus;
+  status: UserStatusEnum;
 
   @Column({ type: 'varchar', nullable: true })
   email: string | null;
 
-  @Column()
-  password: string;
+  @Column({ type: 'varchar', nullable: true })
+  password: string | null;
   @BeforeInsert()
   async hashPassword() {
     if (this.password) {
@@ -85,28 +76,13 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   otp_secret: string | null;
 
-  @Column({ type: 'int', nullable: true })
-  created_by: number | null;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'created_by' })
+  createdBy: User | null;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'created_by' })
-  creator: User | null;
-
-  @ManyToMany(() => Role)
-  @JoinTable({
-    name: 'user_roles',
-    joinColumn: {
-      name: 'user_id',
-    },
-    inverseJoinColumn: {
-      name: 'role_id',
-    },
-  })
-  roles: Role[];
 }

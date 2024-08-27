@@ -1,7 +1,7 @@
-import { UserType } from '../entities/user.entity';
+import { Role } from 'src/role/entities/role.entity';
 
 export interface CreateUserInterface {
-  user_type: UserType;
+  role: Role;
   name: string;
   email?: string;
   phone: string;

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RoleService } from 'src/role/role.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserInterface } from 'src/user/interface/create-user.interface';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -28,17 +29,18 @@ export class SeederService {
     const superUserEmail = await this.usersService.findUserByEmail(
       'superadmin@buspay.com',
     );
-
+    const superadminRole =
+      await this.rolesService.findRoleByName('super_admin');
     if (!superUserEmail) {
-      const superUserDto: CreateUserDto = {
+      const superUserInterface: CreateUserInterface = {
         name: 'admin',
         email: 'superadmin@buspay.com',
         phone: '+911122334455',
-        user_type: 'super_admin',
+        role: superadminRole,
         password: 'adminPassword',
-      } as CreateUserDto;
+      } as CreateUserInterface;
 
-      await this.usersService.create(superUserDto);
+      await this.usersService.create(superUserInterface);
       console.log('Superuser seeded successfully.');
     } else {
       console.log('Superuser already exists.');
