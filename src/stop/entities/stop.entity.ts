@@ -1,9 +1,11 @@
+import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('stop')
@@ -31,4 +33,7 @@ export class Stop {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @OneToMany(() => RouteStop, (stopRoutes) => stopRoutes.stop)
+  routeStop: RouteStop[];
 }

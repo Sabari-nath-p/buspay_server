@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { StopModule } from './stop/stop.module';
 import { BusModule } from './bus/bus.module';
 import { RouteModule } from './route/route.module';
+import { RouteStopsModule } from './route-stops/route-stops.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { RouteModule } from './route/route.module';
     StopModule,
     BusModule,
     RouteModule,
+    RouteStopsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

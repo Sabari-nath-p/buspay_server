@@ -1,4 +1,5 @@
 import { Bus } from 'src/bus/entities/bus.entity';
+import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import {
   Entity,
   Column,
@@ -7,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('route')
@@ -29,4 +31,7 @@ export class Route {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @OneToMany(() => RouteStop, (routeStop) => routeStop.route)
+  routeStop: RouteStop[];
 }
