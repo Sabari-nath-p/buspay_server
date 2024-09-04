@@ -24,16 +24,17 @@ export class AuthService {
 
   async signIn(email: string, pass: string) {
     if (!email) {
-      throw new BadRequestException(
-        `Provide field 'email' for app-type super_admin`,
-      );
+      throw new BadRequestException(`Provide field 'email'`);
     }
     if (!pass) {
-      throw new BadRequestException(`Missing field 'password' for super_admin`);
+      throw new BadRequestException(`Missing field 'password'`);
     }
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
       throw new UnauthorizedException(`User with email ${email} not found`);
+    }
+    if (user.status !== 'active') {
+      throw new ConflictException('User is inactive');
     }
     const passCheck = await bcrypt.compare(pass, user.password);
     if (!passCheck) {
@@ -52,6 +53,9 @@ export class AuthService {
     let user = await this.usersService.findUserByPhone(phone);
     if (!user) {
       throw new NotFoundException('user not found');
+    }
+    if (user.status !== 'active') {
+      throw new ConflictException('User is inactive');
     }
     const otpSecret = this.otpService.generateSecret();
     const otp = this.otpService.generateOtp(otpSecret);

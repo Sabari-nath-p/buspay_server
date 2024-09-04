@@ -10,7 +10,12 @@ import {
 export class SignInDto {
   appType: string;
 
-  @ValidateIf((obj) => obj.appType === 'super_admin')
+  @ValidateIf(
+    (obj) =>
+      obj.appType === 'super_admin' ||
+      obj.appType === 'bus__owner' ||
+      obj.appType === 'conductor',
+  )
   @IsEmail()
   email: string;
 
@@ -25,7 +30,12 @@ export class SignInDto {
   @IsString()
   phone: string;
 
-  @ValidateIf((obj) => obj.appType === 'super_admin')
+  @ValidateIf(
+    (obj) =>
+      obj.appType === 'super_admin' ||
+      obj.appType === 'bus__owner' ||
+      obj.appType === 'conductor',
+  )
   @IsNotEmpty()
   @IsString()
   password: string;

@@ -1,14 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { BusService } from './bus.service';
 import { CreateBusDto } from './dto/create-bus.dto';
 import { UpdateBusDto } from './dto/update-bus.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('bus')
 export class BusController {
-  constructor(private readonly busService: BusService) {}
+  constructor(
+    private readonly busService: BusService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
-  create(@Body() createBusDto: CreateBusDto) {
+  async create(@Body() createBusDto: CreateBusDto) {
+    const ownerExist = await this.userService.findUserById(
+      createBusDto.owner_id,
+    );
+    if (!ownerExist) {
+      throw new NotFoundException('Bus Owner not found');
+    }
+    if (ownerExist.role.name !== 'bus_owner') {
+      throw new ConflictException('User is not a bus owner');
+    }
     return this.busService.create(createBusDto);
   }
 

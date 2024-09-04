@@ -21,6 +21,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { SignUpDto } from './dto/signup.dto';
 import { RoleService } from 'src/role/role.service';
 import { ResponseService } from 'src/common/response/response.service';
+import { In } from 'typeorm';
 
 @Controller('auth')
 export class AuthController {
@@ -35,27 +36,48 @@ export class AuthController {
   async signIn(@Body() signInDto: SignInDto, @Req() request: Request) {
     let authenticationResult;
     const appType = request.headers['app-type'];
-    signInDto.appType = appType;
     if (!appType) {
-      throw new BadRequestException('no app-type header found');
-    } else if (appType !== 'super_admin' && appType !== 'user') {
+      throw new BadRequestException('No app-type header found');
+    }
+    const validAppTypes = ['super_admin', 'user', 'bus_owner', 'conductor'];
+    if (!validAppTypes.includes(appType)) {
       throw new BadRequestException('Invalid app-type');
     }
-    if (appType == 'super_admin') {
+    signInDto.appType = appType;
+    if (['super_admin', 'bus_owner', 'conductor'].includes(appType)) {
       const { email, password } = signInDto;
-      authenticationResult = this.authService.signIn(email, password);
-    } else if (appType == 'user') {
+      if (!email || !password) {
+        throw new BadRequestException(
+          'Email and password are required for this app type',
+        );
+      }
+      authenticationResult = await this.authService.signIn(email, password);
+    } else if (appType === 'user') {
       const { phone } = signInDto;
-      authenticationResult = this.authService.generateOtpForUser(phone);
+      if (!phone) {
+        throw new BadRequestException(
+          'Phone number is required for user app type',
+        );
+      }
+      authenticationResult = await this.authService.generateOtpForUser(phone);
     }
+
     return authenticationResult;
   }
 
   @Post('sign-up')
   async signup(@Body() signUpDto: SignUpDto) {
-    const userExist = await this.usersService.findUserByPhone(signUpDto.phone);
-    if (userExist) {
-      throw new BadRequestException('User already exists');
+    const userWithPhoneExist = await this.usersService.findUserByPhone(
+      signUpDto.phone,
+    );
+    if (userWithPhoneExist) {
+      throw new BadRequestException('User with phone already exists');
+    }
+    const userWithEmailExist = await this.usersService.findUserByEmail(
+      signUpDto.phone,
+    );
+    if (userWithEmailExist) {
+      throw new BadRequestException('User with email already exists');
     }
     const role = await this.roleService.findRoleByName(signUpDto.role);
     let data = {
@@ -65,7 +87,30 @@ export class AuthController {
       lattitude: signUpDto.lattitude,
       longitude: signUpDto.longitude,
       role: role,
+      status: 'active',
+      password: null,
     };
+    if (signUpDto.role == 'bus_owner' || signUpDto.role == 'conductor') {
+      if (signUpDto.password !== signUpDto.confirm_password) {
+        throw new BadRequestException(
+          'Password and confirm password do not match',
+        );
+      }
+      data = {
+        ...data,
+        password: signUpDto.password,
+      };
+      if (signUpDto.role == 'bus_owner') {
+        data.status = 'pending';
+        const user = await this.usersService.createUser(data);
+        return {
+          status: true,
+          message:
+            'user created successfully, wait for the superadmin to approve',
+          data: user,
+        };
+      }
+    }
     const user = await this.usersService.createUser(data);
     const otp = await this.authService.generateOtpForUser(signUpDto.phone);
     return otp;
@@ -87,7 +132,7 @@ export class AuthController {
         user.name,
         'user',
       );
-      return {  
+      return {
         message: 'OTP verification successful',
         tokens,
         user,

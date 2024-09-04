@@ -35,4 +35,14 @@ export class SignUpDto {
   @IsOptional()
   @IsString()
   longitude: string;
+
+  @ValidateIf((obj) => obj.role == 'bus_owner' || obj.role == 'conductor')
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
+  @ValidateIf((obj) => obj.role == 'bus_owner' || obj.role == 'conductor')
+  @IsNotEmpty()
+  @IsString()
+  confirm_password: string;
 }

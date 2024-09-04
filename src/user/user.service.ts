@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { OtpService } from 'src/otp/otp.service';
 import { Role } from 'src/role/entities/role.entity';
 import { IsLongitude } from 'class-validator';
+import { changeUserStatusDto } from './dto/change-status.dto';
 
 @Injectable()
 export class UserService {
@@ -47,6 +48,12 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async changeStatus(id: number, changeUserStatus: changeUserStatusDto) {
+    const user = await this.findOne(id);
+    user.status = changeUserStatus.status;
+    return await this.userRepository.save(user);
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
@@ -85,6 +92,7 @@ export class UserService {
     lattitude: string;
     longitude: string;
     role: Role;
+    password: string;
   }): Promise<User> {
     //    const otpSecret = this.otpService.generateSecret();
     const newUser: User = this.userRepository.create({
@@ -95,6 +103,7 @@ export class UserService {
       longitude: data.longitude ? data.longitude : null,
       role: data.role,
       status: UserStatusEnum.PENDING,
+      password: data.password,
     });
     const savedUser = await this.userRepository.save(newUser);
     return savedUser;

@@ -13,7 +13,7 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @IsIn(['super_admin', 'bus_owner', 'end_user', 'conductor'])
+  @IsIn(['super_admin', 'bus_owner', 'conductor'])
   role: string;
 
   @IsNotEmpty()
@@ -39,7 +39,6 @@ export class CreateUserDto {
   @IsString()
   profile_image: string;
 
-  @ValidateIf((object) => object.user_type === 'super-admin')
   @IsString()
   password: string;
 }

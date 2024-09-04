@@ -7,9 +7,16 @@ import { User } from './entities/user.entity';
 import { OtpModule } from 'src/otp/otp.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoleModule } from 'src/role/role.module';
+import { ResponseModule } from 'src/common/response/response.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), OtpModule, JwtModule, RoleModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    OtpModule,
+    JwtModule,
+    RoleModule,
+    ResponseModule,
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
