@@ -11,7 +11,7 @@ import {
 @Entity('stop')
 export class Stop {
   @PrimaryGeneratedColumn('increment')
-  id: bigint;
+  id: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   name: string;
@@ -23,7 +23,7 @@ export class Stop {
   longitude: string;
 
   @Column({ type: 'varchar', nullable: true })
-  district: string;
+  district: string; 
 
   @Column({ type: 'varchar', nullable: true })
   state: string;

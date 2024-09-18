@@ -1,20 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { StopService } from './stop.service';
 import { CreateStopDto } from './dto/create-stop.dto';
 import { UpdateStopDto } from './dto/update-stop.dto';
+import { ResponseService } from 'src/common/response/response.service';
 
 @Controller('stop')
 export class StopController {
-  constructor(private readonly stopService: StopService) {}
+  constructor(
+    private readonly stopService: StopService,
+    private responseService: ResponseService,
+  ) {}
 
   @Post()
-  create(@Body() createStopDto: CreateStopDto) {
-    return this.stopService.create(createStopDto);
+  async create(@Body() createStopDto: CreateStopDto) {
+    const stop = await this.stopService.create(createStopDto);
+    return this.responseService.successResponse(
+      'New Stop Created sucessfully',
+      201,
+      stop,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.stopService.findAll();
+  async findAll(@Query() filter) {
+    const stopList = await this.stopService.findAll(filter);
+    return this.responseService.successResponse(
+      'Stop List Successfull',
+      200,
+      stopList,
+    );
   }
 
   @Get(':id')

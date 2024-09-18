@@ -1,15 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStopDto } from './dto/create-stop.dto';
 import { UpdateStopDto } from './dto/update-stop.dto';
+import { CreateStopInterface } from './interface/create-stop.interface';
+import { Repository } from 'typeorm';
+import { Stop } from './entities/stop.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class StopService {
-  create(createStopDto: CreateStopDto) {
-    return 'This action adds a new stop';
+  constructor(
+    @InjectRepository(Stop)
+    private readonly stopRepository: Repository<Stop>,
+  ) {}
+  async create(createStopInterface: CreateStopInterface) {
+    const stop = this.stopRepository.create(createStopInterface);
+    return await this.stopRepository.save(stop);
   }
 
-  findAll() {
-    return `This action returns all stop`;
+  async findAll(filter: any) {
+    let where;
+    const listData = await this.stopRepository.find({
+      where,
+    });
+    return listData;
   }
 
   findOne(id: number) {

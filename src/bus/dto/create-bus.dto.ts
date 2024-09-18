@@ -15,5 +15,5 @@ export class CreateBusDto {
 
   @IsNotEmpty()
   @IsInt()
-  no_of_trips: number;
+  no_trips_per_day: number;
 }

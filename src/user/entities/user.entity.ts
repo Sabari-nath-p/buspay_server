@@ -26,7 +26,7 @@ export function encodedPassword(rawPassword: string) {
   return bcrypt.hashSync(rawPassword, SALT);
 }
 
-@Entity('user')
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

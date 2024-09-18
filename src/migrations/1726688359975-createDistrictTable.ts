@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateRolesTable1723832627479 implements MigrationInterface {
+export class CreateDistrictTable1726688359975 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'roles',
+        name: 'districts',
         columns: [
           {
             name: 'id',
@@ -28,22 +28,23 @@ export class CreateRolesTable1723832627479 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'users',
+      'buses',
       new TableForeignKey({
-        columnNames: ['role_id'],
+        columnNames: ['district_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'roles',
+        referencedTableName: 'districts',
         onDelete: 'CASCADE',
       }),
     );
   }
-
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('users');
+    const table = await queryRunner.getTable('buses');
     const foreignKey = table.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('role_id') !== -1,
+      (fk) => fk.columnNames.indexOf('district_id') !== -1,
     );
-    await queryRunner.dropForeignKey('users', foreignKey);
-    await queryRunner.dropTable('roles');
+    if (foreignKey) {
+      await queryRunner.dropForeignKey('buses', foreignKey);
+    }
+    await queryRunner.dropTable('districts');
   }
 }

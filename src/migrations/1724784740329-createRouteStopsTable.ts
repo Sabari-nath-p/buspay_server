@@ -29,8 +29,13 @@ export class CreateRouteStopsTable1724784740329 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'route_order',
-            type: 'int',
+            name: 'distance_from_start',
+            type: 'decimal',
+            isNullable: false,
+          },
+          {
+            name: 'wage_from_start',
+            type: 'decimal',
             isNullable: false,
           },
           {
@@ -55,7 +60,7 @@ export class CreateRouteStopsTable1724784740329 implements MigrationInterface {
       new TableForeignKey({
         columnNames: ['stop_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'stop',
+        referencedTableName: 'stops',
         onDelete: 'CASCADE',
       }),
     );
@@ -65,7 +70,7 @@ export class CreateRouteStopsTable1724784740329 implements MigrationInterface {
       new TableForeignKey({
         columnNames: ['route_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'route',
+        referencedTableName: 'routes',
         onDelete: 'CASCADE',
       }),
     );

@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateBusTable1724782796905 implements MigrationInterface {
+export class CreateBusTypeTable1725910606402 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'buses',
+        name: 'bus_types',
         columns: [
           {
             name: 'id',
@@ -19,63 +19,39 @@ export class CreateBusTable1724782796905 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'name',
+            name: 'type',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'bus_no',
-            type: 'varchar',
+            name: 'minimum_fare',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
             isNullable: true,
-          },
-          {
-            name: 'state',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'district_id',
-            type: 'int',
-            isNullable: false,
-          },
-          {
-            name: 'owner_id',
-            type: 'int',
-            isNullable: true,
-          },
-          {
-            name: 'bus_type_id',
-            type: 'int',
-            isNullable: true,
-          },
-          {
-            name: 'no_trips_per_day',
-            type: 'int',
-            isNullable: false,
           },
           {
             name: 'created_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
-            isNullable: false,
           },
           {
             name: 'updated_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
-            isNullable: false,
           },
         ],
       }),
+      true,
     );
 
     await queryRunner.createForeignKey(
       'buses',
       new TableForeignKey({
-        columnNames: ['owner_id'],
+        columnNames: ['bus_type_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'users',
+        referencedTableName: 'bus_types',
         onDelete: 'SET NULL',
       }),
     );
@@ -84,9 +60,11 @@ export class CreateBusTable1724782796905 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable('buses');
     const foreignKey = table.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('owner_id') !== -1,
+      (fk) => fk.columnNames.indexOf('bus_type_id') !== -1,
     );
-    await queryRunner.dropForeignKey('buses', foreignKey);
-    await queryRunner.dropTable('buses');
+    if (foreignKey) {
+      await queryRunner.dropForeignKey('buses', foreignKey);
+    }
+    await queryRunner.dropTable('bus_types');
   }
 }

@@ -12,6 +12,7 @@ import { StopModule } from './stop/stop.module';
 import { BusModule } from './bus/bus.module';
 import { RouteModule } from './route/route.module';
 import { RouteStopsModule } from './route-stops/route-stops.module';
+import { BusTypeModule } from './bus-type/bus-type.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { RouteStopsModule } from './route-stops/route-stops.module';
     BusModule,
     RouteModule,
     RouteStopsModule,
+    BusTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
