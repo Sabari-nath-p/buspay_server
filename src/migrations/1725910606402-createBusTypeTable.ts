@@ -28,7 +28,21 @@ export class CreateBusTypeTable1725910606402 implements MigrationInterface {
             type: 'decimal',
             precision: 10,
             scale: 2,
-            isNullable: true,
+            isNullable: false,
+          },
+          {
+            name: 'minimum_kilometer',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: false,
+          },
+          {
+            name: 'fare_per_kilometer',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: false,
           },
           {
             name: 'created_at',

@@ -26,8 +26,17 @@ export class RouteStop {
   @JoinColumn({ name: 'route_id' })
   route: Route;
 
-  @Column({ type: 'int' })
-  route_order: number;
+  @Column({ type: 'decimal', precision: 10, scale: 0, nullable: false })
+  distance_from_start: number;
+
+  @Column({ type: 'time', nullable: true })
+  time_from_start: string;
+
+  @Column({ type: 'bool', nullable: true })
+  is_starting_point: boolean;
+
+  @Column({ type: 'bool', nullable: true })
+  is_destination: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

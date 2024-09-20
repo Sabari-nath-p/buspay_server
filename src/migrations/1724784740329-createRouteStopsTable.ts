@@ -36,6 +36,21 @@ export class CreateRouteStopsTable1724784740329 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'time_from_start',
+            type: 'time',
+            isNullable: true,
+          },
+          {
+            name: 'is_starting_point',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'is_destination',
+            type: 'boolean',
+            default: false,
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',

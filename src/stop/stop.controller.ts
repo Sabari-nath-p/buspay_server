@@ -12,17 +12,31 @@ import { StopService } from './stop.service';
 import { CreateStopDto } from './dto/create-stop.dto';
 import { UpdateStopDto } from './dto/update-stop.dto';
 import { ResponseService } from 'src/common/response/response.service';
+import { DistrictsService } from 'src/districts/districts.service';
+import { BusTypeService } from 'src/bus-type/bus-type.service';
 
 @Controller('stop')
 export class StopController {
   constructor(
     private readonly stopService: StopService,
     private responseService: ResponseService,
+    private readonly districtService: DistrictsService,
+    private readonly BusTypeService: BusTypeService,
   ) {}
 
   @Post()
   async create(@Body() createStopDto: CreateStopDto) {
-    const stop = await this.stopService.create(createStopDto);
+    const districtResponse = await this.districtService.findOne(
+      createStopDto.district_id,
+    );
+    const busTypes = await this.BusTypeService.findByIds(
+      createStopDto.bus_type_ids,
+    );
+    const stop = await this.stopService.create({
+      ...createStopDto,
+      district: districtResponse.data,
+      busTypes,
+    });
     return this.responseService.successResponse(
       'New Stop Created sucessfully',
       201,

@@ -1,3 +1,4 @@
+import { BusType } from 'src/bus-type/entities/bus-type.entity';
 import { District } from 'src/districts/entities/district.entity';
 import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import {
@@ -8,6 +9,8 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
+  ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('stops')
@@ -27,9 +30,6 @@ export class Stop {
   @Column({ type: 'int', nullable: true })
   district_id: number;
 
-  @Column({ type: 'varchar', nullable: true })
-  state: string;
-
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
@@ -42,5 +42,9 @@ export class Stop {
   @ManyToOne(() => District, (district) => district.stops, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'district_id' })
   district: District;
+
+  @ManyToMany(() => BusType, (busType) => busType.stops)
+  busTypes: BusType[];
 }

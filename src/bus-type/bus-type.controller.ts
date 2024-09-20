@@ -1,20 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { BusTypeService } from './bus-type.service';
 import { CreateBusTypeDto } from './dto/create-bus-type.dto';
 import { UpdateBusTypeDto } from './dto/update-bus-type.dto';
+import { ResponseService } from 'src/common/response/response.service';
 
 @Controller('bus-type')
 export class BusTypeController {
-  constructor(private readonly busTypeService: BusTypeService) {}
+  constructor(
+    private readonly busTypeService: BusTypeService,
+    private readonly responseService: ResponseService,
+  ) {}
 
   @Post()
-  create(@Body() createBusTypeDto: CreateBusTypeDto) {
-    return this.busTypeService.create(createBusTypeDto);
+  async create(@Body() createBusTypeDto: CreateBusTypeDto) {
+    const busType = await this.busTypeService.create(createBusTypeDto);
+    return this.responseService.successResponse(
+      'Bus Type Created Sucessfully',
+      201,
+      busType,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.busTypeService.findAll();
+  async findAll(@Query() filter) {
+    const listData = await this.busTypeService.findAll(filter);
+    return this.responseService.successResponse(
+      'Bus Type List Sucessfull',
+      200,
+      listData,
+    );
   }
 
   @Get(':id')

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RouteStopsService } from './route-stops.service';
 import { CreateRouteStopDto } from './dto/create-route-stop.dto';
 import { UpdateRouteStopDto } from './dto/update-route-stop.dto';
@@ -7,7 +15,7 @@ import { UpdateRouteStopDto } from './dto/update-route-stop.dto';
 export class RouteStopsController {
   constructor(private readonly routeStopsService: RouteStopsService) {}
 
-  @Post()
+  @Post('assign')
   create(@Body() createRouteStopDto: CreateRouteStopDto) {
     return this.routeStopsService.create(createRouteStopDto);
   }
@@ -23,7 +31,10 @@ export class RouteStopsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRouteStopDto: UpdateRouteStopDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRouteStopDto: UpdateRouteStopDto,
+  ) {
     return this.routeStopsService.update(+id, updateRouteStopDto);
   }
 
