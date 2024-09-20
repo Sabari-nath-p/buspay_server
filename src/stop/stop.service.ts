@@ -13,8 +13,8 @@ export class StopService {
     private readonly stopRepository: Repository<Stop>,
   ) {}
   async create(createStopInterface: CreateStopInterface) {
-    const stop = this.stopRepository.create(createStopInterface);
-    return await this.stopRepository.save(stop);
+    // const stop = this.stopRepository.create(createStopInterface);
+    // return await this.stopRepository.save(stop);
   }
 
   async findAll(filter: any) {

@@ -30,14 +30,9 @@ export class CreateStops1724738803039 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'district',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'state',
-            type: 'varchar',
-            isNullable: true,
+            name: 'district_id',
+            type: 'int',
+            isNullable: false,
           },
           {
             name: 'created_at',

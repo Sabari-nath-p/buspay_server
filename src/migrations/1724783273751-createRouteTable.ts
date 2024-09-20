@@ -24,23 +24,13 @@ export class CreateRouteTable1724783273751 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'bus_id',
-            type: 'int',
+            name: 'total_distance',
+            type: 'decimal',
             isNullable: true,
           },
           {
-            name: 'timings',
-            type: 'varchar',
-            isNullable: false,
-          },
-          {
-            name: 'total_distance',
-            type: 'decimal',
-            isNullable: false,
-          },
-          {
-            name: 'district',
-            type: 'varchar',
+            name: 'district_id',
+            type: 'int',
             isNullable: false,
           },
           {
@@ -59,24 +49,9 @@ export class CreateRouteTable1724783273751 implements MigrationInterface {
         ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      'routes',
-      new TableForeignKey({
-        columnNames: ['bus_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'buses',
-        onDelete: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('routes');
-    const foreignKey = table.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('bus_id') !== -1,
-    );
-    await queryRunner.dropForeignKey('routes', foreignKey);
     await queryRunner.dropTable('routes');
   }
 }

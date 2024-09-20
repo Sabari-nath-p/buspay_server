@@ -3,6 +3,7 @@ import { District } from './entities/district.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResponseService } from '../common/response/response.service';
+import { State } from 'src/states/entities/state.entity';
 
 @Injectable()
 export class DistrictsService {
@@ -25,16 +26,18 @@ export class DistrictsService {
     await this.districtRepo.save(district);
   }
 
-  async skipOrCreate(data: { name: string }) {
+  async skipOrCreate(data: { name: string; state: State }) {
     const district = await this.districtRepo.findOne({
       where: {
         name: data.name,
+        state: data.state,
       },
     });
 
     if (!district) {
       const districtData = new District();
       districtData.name = data.name;
+      districtData.state = data.state;
       await this.districtRepo.save(districtData);
     }
   }

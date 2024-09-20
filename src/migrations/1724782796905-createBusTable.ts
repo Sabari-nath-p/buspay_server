@@ -29,11 +29,6 @@ export class CreateBusTable1724782796905 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'state',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
             name: 'district_id',
             type: 'int',
             isNullable: false,

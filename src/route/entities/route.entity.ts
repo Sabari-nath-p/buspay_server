@@ -1,4 +1,5 @@
 import { Bus } from 'src/bus/entities/bus.entity';
+import { District } from 'src/districts/entities/district.entity';
 import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import {
   Entity,
@@ -34,4 +35,9 @@ export class Route {
 
   @OneToMany(() => RouteStop, (routeStop) => routeStop.route)
   routeStop: RouteStop[];
+
+  @ManyToOne(() => District, (district) => district.routes, {
+    onDelete: 'CASCADE',
+  })
+  district: District;
 }

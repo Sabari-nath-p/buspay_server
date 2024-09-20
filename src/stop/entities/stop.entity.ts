@@ -1,3 +1,4 @@
+import { District } from 'src/districts/entities/district.entity';
 import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import {
   Entity,
@@ -6,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity('stops')
@@ -22,8 +24,8 @@ export class Stop {
   @Column({ type: 'varchar', nullable: true })
   longitude: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  district: string; 
+  @Column({ type: 'int', nullable: true })
+  district_id: number;
 
   @Column({ type: 'varchar', nullable: true })
   state: string;
@@ -36,4 +38,9 @@ export class Stop {
 
   @OneToMany(() => RouteStop, (stopRoutes) => stopRoutes.stop)
   routeStop: RouteStop[];
+
+  @ManyToOne(() => District, (district) => district.stops, {
+    onDelete: 'CASCADE',
+  })
+  district: District;
 }

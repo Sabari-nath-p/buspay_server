@@ -15,6 +15,7 @@ import { RouteStopsModule } from './route-stops/route-stops.module';
 import { BusTypeModule } from './bus-type/bus-type.module';
 import { DistrictsModule } from './districts/districts.module';
 import { PreferenceModule } from './preference/preference.module';
+import { StatesModule } from './states/states.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { PreferenceModule } from './preference/preference.module';
     BusTypeModule,
     DistrictsModule,
     PreferenceModule,
+    StatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
