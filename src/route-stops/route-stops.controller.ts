@@ -6,23 +6,40 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RouteStopsService } from './route-stops.service';
 import { CreateRouteStopDto } from './dto/create-route-stop.dto';
 import { UpdateRouteStopDto } from './dto/update-route-stop.dto';
+import { ResponseService } from 'src/common/response/response.service';
 
 @Controller('route-stops')
 export class RouteStopsController {
-  constructor(private readonly routeStopsService: RouteStopsService) {}
+  constructor(
+    private readonly routeStopsService: RouteStopsService,
+    private readonly responseService: ResponseService,
+  ) {}
 
   @Post('assign')
-  create(@Body() createRouteStopDto: CreateRouteStopDto) {
-    return this.routeStopsService.create(createRouteStopDto);
+  async create(@Body() createRouteStopDto: CreateRouteStopDto) {
+    const { stop_id, route_id } = createRouteStopDto;
+    await this.routeStopsService.routeStopExistCheck(route_id, stop_id);
+    const routeStop = await this.routeStopsService.create(createRouteStopDto);
+    return this.responseService.successResponse(
+      'Successfully assigned this stop to the route',
+      201,
+      routeStop,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.routeStopsService.findAll();
+  async findAll(@Query() filter) {
+    const listData = await this.routeStopsService.findAll(filter);
+    return this.responseService.successResponse(
+      'Successfully retrieved all route stops',
+      200,
+      listData,
+    );
   }
 
   @Get(':id')

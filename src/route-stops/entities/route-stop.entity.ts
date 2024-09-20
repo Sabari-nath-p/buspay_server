@@ -10,7 +10,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-
 @Entity('route_stops')
 export class RouteStop {
   @PrimaryGeneratedColumn('increment')
@@ -21,6 +20,12 @@ export class RouteStop {
   })
   @JoinColumn({ name: 'stop_id' })
   stop: Stop;
+
+  @Column({ type: 'int', nullable: true })
+  stop_id: number;
+
+  @Column({ type: 'int', nullable: true })
+  route_id: number;
 
   @ManyToOne(() => Route, (route) => route.routeStop, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'route_id' })

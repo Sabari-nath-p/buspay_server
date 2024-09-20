@@ -25,7 +25,7 @@ export class CreateRouteStopDto {
   @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, {
     message: 'time_from_start must be a valid time in the format HH:MM:SS',
   })
-  time_from_start?: string;
+  time_from_start: string;
 
   @IsOptional()
   @IsBoolean()
