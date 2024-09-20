@@ -47,9 +47,6 @@ export class Bus {
   @JoinColumn({ name: 'owner_id' })
   owner: User | null;
 
-  @ManyToOne(() => Route, (route) => route.bus)
-  routes: Route;
-
   @Column({ type: 'int' })
   no_seats: number;
 

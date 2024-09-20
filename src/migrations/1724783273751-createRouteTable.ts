@@ -26,6 +26,8 @@ export class CreateRouteTable1724783273751 implements MigrationInterface {
           {
             name: 'total_distance',
             type: 'decimal',
+            precision: 10,
+            scale: 2,
             isNullable: true,
           },
           {

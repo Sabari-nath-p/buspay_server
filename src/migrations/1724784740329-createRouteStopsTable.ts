@@ -31,11 +31,8 @@ export class CreateRouteStopsTable1724784740329 implements MigrationInterface {
           {
             name: 'distance_from_start',
             type: 'decimal',
-            isNullable: false,
-          },
-          {
-            name: 'wage_from_start',
-            type: 'decimal',
+            precision: 10,
+            scale: 2,
             isNullable: false,
           },
           {

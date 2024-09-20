@@ -42,7 +42,7 @@ export class DistrictsService {
     }
   }
   async listDistrict() {
-    const list = await this.districtRepo.find();
+    const list = await this.districtRepo.find({ relations: ['state'] });
     return this.responseService.successResponse(
       'District List Successfull',
       200,

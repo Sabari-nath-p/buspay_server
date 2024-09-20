@@ -20,12 +20,8 @@ export class Route {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @OneToMany(() => Bus, (bus) => bus.routes, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'bus_id' })
-  bus: Bus[];
-
-  @Column({ type: 'varchar', length: 255 })
-  timings: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  total_distance: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
@@ -39,5 +35,6 @@ export class Route {
   @ManyToOne(() => District, (district) => district.routes, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'district_id' })
   district: District;
 }
