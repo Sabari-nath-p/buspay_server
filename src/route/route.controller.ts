@@ -1,11 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RouteService } from './route.service';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
+import { ResponseService } from 'src/common/response/response.service';
 
 @Controller('route')
 export class RouteController {
-  constructor(private readonly routeService: RouteService) {}
+  constructor(
+    private readonly routeService: RouteService,
+    private readonly responseService: ResponseService,
+  ) {}
 
   @Post()
   create(@Body() createRouteDto: CreateRouteDto) {

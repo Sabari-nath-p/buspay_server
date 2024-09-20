@@ -9,11 +9,23 @@ export class CreateBusDto {
   @IsString()
   bus_no: string;
 
+  @IsOptional()
+  @IsString()
+  state: string;
+
   @IsNotEmpty()
   @IsInt()
   owner_id: number;
 
   @IsNotEmpty()
   @IsInt()
-  no_trips_per_day: number;
+  district_id: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  no_seats: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  prefernce_ids: number[];
 }

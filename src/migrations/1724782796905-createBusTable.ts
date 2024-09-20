@@ -49,7 +49,7 @@ export class CreateBusTable1724782796905 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'no_trips_per_day',
+            name: 'no_of_seats',
             type: 'int',
             isNullable: false,
           },

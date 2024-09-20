@@ -8,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserInterface } from './interface/create-user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserStatusEnum } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { OtpService } from 'src/otp/otp.service';
 import { Role } from 'src/role/entities/role.entity';
 import { IsLongitude } from 'class-validator';
@@ -26,8 +26,19 @@ export class UserService {
     return await this.userRepository.save(userData);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(filter: any) {
+    let where: any = {};
+    if (filter.status) {
+      where.status = filter.status;
+    }
+    if (filter.role) {
+      where.role = { name: filter.role };
+    } else {
+      where.role = { name: Not('super_admin') };
+    }
+    return await this.userRepository.find({
+      where,
+    });
   }
 
   async findOne(id: number) {

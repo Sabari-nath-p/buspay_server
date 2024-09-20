@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-@Entity('stop')
+@Entity('stops')
 export class Stop {
   @PrimaryGeneratedColumn('increment')
   id: number;

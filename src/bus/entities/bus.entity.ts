@@ -1,4 +1,6 @@
 import { BusType } from 'src/bus-type/entities/bus-type.entity';
+import { District } from 'src/districts/entities/district.entity';
+import { Preference } from 'src/preference/entities/preference.entity';
 import { Route } from 'src/route/entities/route.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -10,9 +12,11 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
-@Entity('bus')
+@Entity('buses')
 export class Bus {
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -43,15 +47,36 @@ export class Bus {
   @JoinColumn({ name: 'owner_id' })
   owner: User | null;
 
-  @OneToMany(() => Route, (route) => route.bus)
-  routes: Route[];
+  @ManyToOne(() => Route, (route) => route.bus)
+  routes: Route;
 
   @Column({ type: 'int' })
-  no_trips_per_day: number;
+  no_seats: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @ManyToMany(() => Preference, (preference) => preference.buses)
+  @JoinTable({
+    name: 'bus_preference', // This is the join table name
+    joinColumn: { name: 'bus_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'preference_id', referencedColumnName: 'id' },
+  })
+  preferences: Preference[];
+
+  @ManyToOne(() => District, (district) => district.buses, {
+    onDelete: 'CASCADE',
+  })
+  district: District;
+
+  @ManyToMany(() => User, (user) => user.buses)
+  @JoinTable({
+    name: 'bus_conductors', 
+    joinColumn: { name: 'bus_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+  })
+  conductors: User[];
 }

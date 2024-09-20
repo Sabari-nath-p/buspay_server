@@ -11,7 +11,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-@Entity('route')
+@Entity('routes')
 export class Route {
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -19,9 +19,9 @@ export class Route {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @ManyToOne(() => Bus, (bus) => bus.routes, { onDelete: 'CASCADE' })
+  @OneToMany(() => Bus, (bus) => bus.routes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'bus_id' })
-  bus: Bus;
+  bus: Bus[];
 
   @Column({ type: 'varchar', length: 255 })
   timings: string;

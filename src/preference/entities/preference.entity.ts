@@ -1,23 +1,20 @@
 import { Bus } from 'src/bus/entities/bus.entity';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
-  OneToMany,
+  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from 'typeorm';
 
-@Entity('bus_types')
-export class BusType {
+@Entity('preference')
+export class Preference {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: false })
   name: string;
-
-  @Column({ type: 'varchar' })
-  type: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
@@ -25,6 +22,6 @@ export class BusType {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  @OneToMany(() => Bus, (bus) => bus.busType)
+  @ManyToMany(() => Bus, (bus) => bus.preferences)
   buses: Bus[];
 }

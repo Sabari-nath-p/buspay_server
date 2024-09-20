@@ -15,6 +15,7 @@ import { CreateBusDto } from './dto/create-bus.dto';
 import { UpdateBusDto } from './dto/update-bus.dto';
 import { UserService } from 'src/user/user.service';
 import { ResponseService } from 'src/common/response/response.service';
+import { PreferenceService } from 'src/preference/preference.service';
 
 @Controller('bus')
 export class BusController {
@@ -22,6 +23,7 @@ export class BusController {
     private readonly busService: BusService,
     private readonly userService: UserService,
     private readonly responseService: ResponseService,
+    private readonly preferenceService: PreferenceService,
   ) {}
 
   @Post()
@@ -35,12 +37,15 @@ export class BusController {
     if (ownerExist.role.name !== 'bus_owner') {
       throw new ConflictException('User is not a bus owner');
     }
-    const bus = await this.busService.create(createBusDto);
-    return this.responseService.successResponse(
-      'Bus Data Created Successfully',
-      201,
-      bus,
+    const busPrefence = await this.preferenceService.findAllByIds(
+      createBusDto.prefernce_ids,
     );
+    // const bus = await this.busService.create(createBusDto);
+    // return this.responseService.successResponse(
+    //   'Bus Data Created Successfully',
+    //   201,
+    //   bus,
+    // );
   }
 
   @Get()

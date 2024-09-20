@@ -13,6 +13,8 @@ import { BusModule } from './bus/bus.module';
 import { RouteModule } from './route/route.module';
 import { RouteStopsModule } from './route-stops/route-stops.module';
 import { BusTypeModule } from './bus-type/bus-type.module';
+import { DistrictsModule } from './districts/districts.module';
+import { PreferenceModule } from './preference/preference.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { BusTypeModule } from './bus-type/bus-type.module';
     RouteModule,
     RouteStopsModule,
     BusTypeModule,
+    DistrictsModule,
+    PreferenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

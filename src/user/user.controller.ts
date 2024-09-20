@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -53,8 +54,13 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(@Query() filter) {
+    const listData = await this.userService.findAll(filter);
+    return this.responseService.successResponse(
+      'User List Successfull',
+      200,
+      listData,
+    );
   }
 
   @Get(':id')

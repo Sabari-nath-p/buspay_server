@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Bus } from 'src/bus/entities/bus.entity';
@@ -90,4 +91,7 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @ManyToMany(() => Bus, (bus) => bus.conductors)
+  bus: Bus[];
 }

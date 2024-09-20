@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DistrictsService } from 'src/districts/districts.service';
 import { RoleService } from 'src/role/role.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { CreateUserInterface } from 'src/user/interface/create-user.interface';
@@ -9,6 +10,7 @@ export class SeederService {
   constructor(
     private readonly rolesService: RoleService,
     private readonly usersService: UserService,
+    private readonly districtService: DistrictsService,
   ) {}
 
   async RolesSeeder() {
@@ -23,6 +25,35 @@ export class SeederService {
       );
     }
     console.log('roles seeded successfully');
+  }
+
+  async DistrictsSeeder() {
+    const count = await this.districtService.getDistrictCount();
+    if (count == 0) {
+      await Promise.all(
+        [
+          'Thiruvananthapuram',
+          'Kollam',
+          'Pathanamthitta',
+          'Alappuzha',
+          'Kottayam',
+          'Idukki',
+          'Ernakulam',
+          'Thrissur',
+          'Palakkad',
+          'Malappuram',
+          'Kozhikode',
+          'Wayanad',
+          'Kannur',
+          'Kasaragod',
+          'Others',
+        ].map(async (name) => {
+          await this.districtService.skipOrCreate({ name: name });
+        }),
+      );
+      console.log('Districts seeded successfully');
+    }
+    console.log('Districts seeded');
   }
 
   async SuperAdminSeeder() {
@@ -50,5 +81,6 @@ export class SeederService {
   async onApplicationBootstrap() {
     await this.RolesSeeder();
     await this.SuperAdminSeeder();
+    await this.DistrictsSeeder();
   }
 }
