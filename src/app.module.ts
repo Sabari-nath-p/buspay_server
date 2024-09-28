@@ -16,6 +16,7 @@ import { BusTypeModule } from './bus-type/bus-type.module';
 import { DistrictsModule } from './districts/districts.module';
 import { PreferenceModule } from './preference/preference.module';
 import { StatesModule } from './states/states.module';
+import { RouteBusModule } from './route-bus/route-bus.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { StatesModule } from './states/states.module';
     DistrictsModule,
     PreferenceModule,
     StatesModule,
+    RouteBusModule,
   ],
   controllers: [AppController],
   providers: [AppService],

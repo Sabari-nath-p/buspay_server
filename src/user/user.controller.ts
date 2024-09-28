@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
+  ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +20,8 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { RoleService } from 'src/role/role.service';
 import { changeUserStatusDto } from './dto/change-status.dto';
 import { ResponseService } from 'src/common/response/response.service';
+import { addConductorDto } from './dto/add-conductor.dto';
+import { BusService } from 'src/bus/bus.service';
 
 @Controller('user')
 export class UserController {
@@ -25,6 +29,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly rolesService: RoleService,
     private readonly responseService: ResponseService,
+    private readonly busService: BusService,
   ) {}
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -40,6 +45,8 @@ export class UserController {
     return this.userService.create({ ...createUserDto, role });
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin')
   @Post(':id/change-status')
   async changeUserStatus(
     @Param('id') id: string,
@@ -50,6 +57,30 @@ export class UserController {
       `user status change to ${(await user).status} successfully`,
       200,
       user,
+    );
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('bus_owner')
+  @Post('add-new-conductor')
+  async addConductor(
+    @Param('id') id: string,
+    @Body() addConductorDto: addConductorDto,
+    @Request() req,
+  ) {
+    const created_by = req.user.sub;
+    const bus = await this.busService.findOne(addConductorDto.bus_id);
+    const conductorRole = await this.rolesService.findRoleByName('conductor');
+    const newConductor = await this.userService.create({
+      ...addConductorDto,
+      role: conductorRole,
+      created_by,
+    });
+    bus.conductors = [...(bus.conductors || []), newConductor];
+    await this.busService.updateBus(bus.id, bus);
+    return this.responseService.successResponse(
+      'Conductor assigned to the bus successfully',
+      201,
     );
   }
 
@@ -64,8 +95,13 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const user = await this.userService.findOne(+id);
+    return this.responseService.successResponse(
+      'User fetch sucessfull',
+      200,
+      user,
+    );
   }
 
   @Patch(':id')
@@ -73,6 +109,25 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('bus_owner')
+  @Delete('conductor/:id')
+  async removeConductor(@Param('id') id: string, @Request() req) {
+    const conductor = await this.userService.findOne(+id);
+    if (conductor.role.name !== 'conductor') {
+      throw new ConflictException('User is not a conductor');
+    }
+    if (conductor.created_by !== req.user.sub) {
+      throw new ConflictException('You are not the owner of the conductor');
+    }
+    await this.userService.remove(+id);
+    return this.responseService.successResponse(
+      'Conductor removed successfully',
+    );
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);

@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBusDto } from './create-bus.dto';
+import { IsArray, IsOptional } from 'class-validator';
+import { User } from 'src/user/entities/user.entity';
 
-export class UpdateBusDto extends PartialType(CreateBusDto) {}
+export class UpdateBusDto {
+  @IsOptional()
+  @IsArray()
+  conductors?: User[];
+}

@@ -1,5 +1,6 @@
 import { Bus } from 'src/bus/entities/bus.entity';
 import { District } from 'src/districts/entities/district.entity';
+import { RouteBus } from 'src/route-bus/entities/route-bus.entity';
 import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import {
   Entity,
@@ -37,4 +38,7 @@ export class Route {
   })
   @JoinColumn({ name: 'district_id' })
   district: District;
+
+  @OneToMany(() => RouteBus, (routeBus) => routeBus.route)
+  routeBus: RouteBus[];
 }

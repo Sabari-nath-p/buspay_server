@@ -9,6 +9,9 @@ import {
   NotFoundException,
   ConflictException,
   Query,
+  UseGuards,
+  Request,
+  ForbiddenException,
 } from '@nestjs/common';
 import { BusService } from './bus.service';
 import { CreateBusDto } from './dto/create-bus.dto';
@@ -16,6 +19,9 @@ import { UpdateBusDto } from './dto/update-bus.dto';
 import { UserService } from 'src/user/user.service';
 import { ResponseService } from 'src/common/response/response.service';
 import { PreferenceService } from 'src/preference/preference.service';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('bus')
 export class BusController {
@@ -26,26 +32,51 @@ export class BusController {
     private readonly preferenceService: PreferenceService,
   ) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('bus_owner')
   @Post()
-  async create(@Body() createBusDto: CreateBusDto) {
-    const ownerExist = await this.userService.findUserById(
-      createBusDto.owner_id,
-    );
-    if (!ownerExist) {
-      throw new NotFoundException('Bus Owner not found');
-    }
-    if (ownerExist.role.name !== 'bus_owner') {
-      throw new ConflictException('User is not a bus owner');
-    }
+  async create(@Body() createBusDto: CreateBusDto, @Request() req) {
+    const owner_id = req.user.sub;
     const busPrefence = await this.preferenceService.findAllByIds(
       createBusDto.prefernce_ids,
     );
-    // const bus = await this.busService.create(createBusDto);
-    // return this.responseService.successResponse(
-    //   'Bus Data Created Successfully',
-    //   201,
-    //   bus,
-    // );
+    const bus = await this.busService.create({
+      ...createBusDto,
+      owner_id,
+      preferences: busPrefence,
+    });
+    return this.responseService.successResponse(
+      'Bus Data Created Successfully',
+      201,
+      bus,
+    );
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('bus_owner')
+  @Post(':busId/assign-conductor/:userId')
+  async assignConductor(
+    @Param('busId') busId: number,
+    @Param('userId') userId: number,
+    @Request() req,
+  ) {
+    const ownerId = req.user.sub;
+    const bus = await this.busService.findOne(busId);
+    if (bus.owner_id !== ownerId) {
+      throw new ForbiddenException(
+        'You do not have permission to assign a conductor to this bus',
+      );
+    }
+    const conductor = await this.userService.validateUserRole(
+      userId,
+      'conductor',
+    );
+    bus.conductors = [conductor];
+    await this.busService.save(bus);
+    return this.responseService.successResponse(
+      'Conductor assigned to the bus successfully',
+      201,
+    );
   }
 
   @Get()

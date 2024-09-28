@@ -41,10 +41,24 @@ export class UserService {
     });
   }
 
-  async findOne(id: number) {
+  async validateUserRole(id: number, role: string) {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: ['role'],
+    });
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+    if (user.role.name !== role) {
+      throw new NotFoundException(`User is not of role ${role}`);
+    }
+    return user;
+  }
+
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['role', 'buses'],
     });
     if (!user) {
       throw new NotFoundException('user not found');
@@ -57,8 +71,8 @@ export class UserService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    return await this.userRepository.delete(id);
   }
 
   async changeStatus(id: number, changeUserStatus: changeUserStatusDto) {
@@ -110,8 +124,6 @@ export class UserService {
       name: data.name,
       phone: data.phone,
       email: data.email,
-      lattitude: data.lattitude ? data.lattitude : null,
-      longitude: data.longitude ? data.longitude : null,
       role: data.role,
       status: UserStatusEnum.PENDING,
       password: data.password,

@@ -65,10 +65,13 @@ export class User {
   }
 
   @Column({ type: 'varchar', nullable: true })
-  lattitude: string | null;
+  district: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  longitude: string | null;
+  pincode: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  address: string | null;
 
   @Column({ type: 'varchar', nullable: true })
   profile_image: string | null;
@@ -82,6 +85,9 @@ export class User {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
   createdBy: User | null;
+
+  @Column({ type: 'int', nullable: true })
+  created_by: number;
 
   @OneToMany(() => Bus, (bus) => bus.owner)
   buses: Bus[];

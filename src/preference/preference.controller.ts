@@ -30,8 +30,13 @@ export class PreferenceController {
   }
 
   @Get()
-  findAll() {
-    return this.preferenceService.findAll();
+  async findAll() {
+    const preferences = await this.preferenceService.findAll();
+    return this.responseService.successResponse(
+      'Prefernces Listed sucessfully',
+      201,
+      preferences,
+    );
   }
 
   @Get(':id')

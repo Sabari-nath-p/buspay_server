@@ -1,21 +1,14 @@
 import {
-  IsOptional,
-  IsNotEmpty,
-  IsString,
-  IsNumber,
   IsEmail,
   IsIn,
-  ValidateIf,
-  IsPhoneNumber,
-  Max,
-  Min,
   IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
 } from 'class-validator';
 
-export class CreateUserDto {
-  @IsIn(['super_admin', 'bus_owner', 'conductor'])
-  role: string;
-
+export class addConductorDto {
   @IsNotEmpty()
   name: string;
 
@@ -23,9 +16,13 @@ export class CreateUserDto {
   @IsPhoneNumber()
   phone: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  bus_id: number;
 
   @IsOptional()
   @IsString()

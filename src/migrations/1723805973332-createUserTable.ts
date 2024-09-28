@@ -51,12 +51,17 @@ export class CreateUserTable1723805973332 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'lattitude',
+            name: 'address',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'longitude',
+            name: 'pincode',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'district',
             type: 'varchar',
             isNullable: true,
           },

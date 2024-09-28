@@ -8,6 +8,7 @@ import { OtpModule } from 'src/otp/otp.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoleModule } from 'src/role/role.module';
 import { ResponseModule } from 'src/common/response/response.module';
+import { BusModule } from 'src/bus/bus.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ResponseModule } from 'src/common/response/response.module';
     JwtModule,
     RoleModule,
     ResponseModule,
+    BusModule,
   ],
   controllers: [UserController],
   providers: [UserService],

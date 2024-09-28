@@ -32,39 +32,6 @@ export class AuthController {
     private responseService: ResponseService,
   ) {}
 
-  @Post('login')
-  async signIn(@Body() signInDto: SignInDto, @Req() request: Request) {
-    let authenticationResult;
-    const appType = request.headers['app-type'];
-    if (!appType) {
-      throw new BadRequestException('No app-type header found');
-    }
-    const validAppTypes = ['super_admin', 'user', 'bus_owner', 'conductor'];
-    if (!validAppTypes.includes(appType)) {
-      throw new BadRequestException('Invalid app-type');
-    }
-    signInDto.appType = appType;
-    if (['super_admin', 'bus_owner', 'conductor'].includes(appType)) {
-      const { email, password } = signInDto;
-      if (!email || !password) {
-        throw new BadRequestException(
-          'Email and password are required for this app type',
-        );
-      }
-      authenticationResult = await this.authService.signIn(email, password);
-    } else if (appType === 'user') {
-      const { phone } = signInDto;
-      if (!phone) {
-        throw new BadRequestException(
-          'Phone number is required for user app type',
-        );
-      }
-      authenticationResult = await this.authService.generateOtpForUser(phone);
-    }
-
-    return authenticationResult;
-  }
-
   @Post('sign-up')
   async signup(@Body() signUpDto: SignUpDto) {
     const userWithPhoneExist = await this.usersService.findUserByPhone(
@@ -114,6 +81,39 @@ export class AuthController {
     const user = await this.usersService.createUser(data);
     const otp = await this.authService.generateOtpForUser(signUpDto.phone);
     return otp;
+  }
+
+  @Post('login')
+  async signIn(@Body() signInDto: SignInDto, @Req() request: Request) {
+    let authenticationResult;
+    const appType = request.headers['app-type'];
+    if (!appType) {
+      throw new BadRequestException('No app-type header found');
+    }
+    const validAppTypes = ['super_admin', 'user', 'bus_owner', 'conductor'];
+    if (!validAppTypes.includes(appType)) {
+      throw new BadRequestException('Invalid app-type');
+    }
+    signInDto.appType = appType;
+    if (['super_admin', 'bus_owner', 'conductor'].includes(appType)) {
+      const { email, password } = signInDto;
+      if (!email || !password) {
+        throw new BadRequestException(
+          'Email and password are required for this app type',
+        );
+      }
+      authenticationResult = await this.authService.signIn(email, password);
+    } else if (appType === 'user') {
+      const { phone } = signInDto;
+      if (!phone) {
+        throw new BadRequestException(
+          'Phone number is required for user app type',
+        );
+      }
+      authenticationResult = await this.authService.generateOtpForUser(phone);
+    }
+
+    return authenticationResult;
   }
 
   @Post('verify-otp')

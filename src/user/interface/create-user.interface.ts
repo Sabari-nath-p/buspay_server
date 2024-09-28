@@ -6,4 +6,5 @@ export interface CreateUserInterface {
   email?: string;
   phone: string;
   password?: string;
+  created_by?: number;
 }

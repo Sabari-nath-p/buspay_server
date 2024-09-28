@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateBusDto {
   @IsNotEmpty()
@@ -9,23 +15,19 @@ export class CreateBusDto {
   @IsString()
   bus_no: string;
 
-  @IsOptional()
-  @IsString()
-  state: string;
-
-  @IsNotEmpty()
-  @IsInt()
-  owner_id: number;
-
   @IsNotEmpty()
   @IsInt()
   district_id: number;
 
   @IsNotEmpty()
   @IsInt()
-  no_seats: number;
+  bus_type_id: number;
 
   @IsNotEmpty()
   @IsInt()
+  no_of_seats: number;
+
+  @IsNotEmpty()
+  @IsArray()
   prefernce_ids: number[];
 }

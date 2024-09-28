@@ -34,7 +34,9 @@ export class AuthService {
       throw new UnauthorizedException(`User with email ${email} not found`);
     }
     if (user.status !== 'active') {
-      throw new ConflictException('User is inactive');
+      throw new ConflictException(
+        'You are inactive or wait until super admin aprroves you',
+      );
     }
     const passCheck = await bcrypt.compare(pass, user.password);
     if (!passCheck) {
