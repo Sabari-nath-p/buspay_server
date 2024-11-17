@@ -37,7 +37,7 @@ export class CreateRouteBusTable1726893716650 implements MigrationInterface {
             name: 'days_of_week',
             type: 'json',
             isNullable: false,
-            default: `'[]'`,
+           // default: `'[]'`,
           },
           {
             name: 'finish_timing',

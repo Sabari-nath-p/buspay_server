@@ -45,11 +45,19 @@ export class PreferenceController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updatePreferenceDto: UpdatePreferenceDto,
   ) {
-    return this.preferenceService.update(+id, updatePreferenceDto);
+    const updatedPrefernce = await this.preferenceService.update(
+      +id,
+      updatePreferenceDto,
+    );
+    return this.responseService.successResponse(
+      'Prefernce updated sucessfully',
+      204,
+      updatedPrefernce,
+    );
   }
 
   @Delete(':id')
