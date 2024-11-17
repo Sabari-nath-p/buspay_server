@@ -20,8 +20,8 @@ export class PreferenceService {
     return await this.preferenceRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} preference`;
+  async findOne(id: number) {
+    return await this.preferenceRepository.findOne({where:{id}})
   }
 
   async findOneByParams(params: { [key: string]: any }, relations?: string[]) {}
@@ -38,9 +38,12 @@ export class PreferenceService {
     }
     return preferences;
   }
-
-  update(id: number, updatePreferenceDto: UpdatePreferenceDto) {
-    return `This action updates a #${id} preference`;
+ 
+  async update(id: number, updatePreferenceDto: UpdatePreferenceDto) {
+    const preference = await this.findOne(id)
+    if(!preference){
+      throw new NotFoundException("preference not found")
+    }
   }
 
   remove(id: number) {
