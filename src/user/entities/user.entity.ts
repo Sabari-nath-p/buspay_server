@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Bus } from 'src/bus/entities/bus.entity';
+import { Trip } from 'src/trips/entities/trip.entity';
 
 export enum UserStatusEnum {
   ACTIVE = 'active',
@@ -100,4 +101,7 @@ export class User {
 
   @ManyToMany(() => Bus, (bus) => bus.conductors)
   bus: Bus[];
+
+  @OneToMany(() => Trip, (trip) => trip.conductor)
+  trips: Trip[];
 }

@@ -17,6 +17,8 @@ import { DistrictsModule } from './districts/districts.module';
 import { PreferenceModule } from './preference/preference.module';
 import { StatesModule } from './states/states.module';
 import { RouteBusModule } from './route-bus/route-bus.module';
+import { TripsModule } from './trips/trips.module';
+import { CouponsModule } from './coupons/coupons.module';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { RouteBusModule } from './route-bus/route-bus.module';
     PreferenceModule,
     StatesModule,
     RouteBusModule,
+    TripsModule,
+    CouponsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
