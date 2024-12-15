@@ -3,6 +3,7 @@ import { District } from 'src/districts/entities/district.entity';
 import { Preference } from 'src/preference/entities/preference.entity';
 import { RouteBus } from 'src/route-bus/entities/route-bus.entity';
 import { Route } from 'src/route/entities/route.entity';
+import { Trip } from 'src/trips/entities/trip.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Entity,
@@ -84,4 +85,7 @@ export class Bus {
 
   @OneToMany(() => RouteBus, (routeBus) => routeBus.bus)
   routeBus: RouteBus[];
+
+  @OneToMany(() => Trip, (trip) => trip.bus)
+  trips: Trip[];
 }

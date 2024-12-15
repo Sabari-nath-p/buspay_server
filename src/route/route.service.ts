@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,8 +23,15 @@ export class RouteService {
     return await this.routeRepository.find({ where });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} route`;
+  async findOne(id: number) {
+    const route = await this.routeRepository.findOne({
+      where: { id },
+      relations: ['routeStop', 'district', 'routeBus', 'trips'],
+    });
+    if (!route) {
+      throw new NotFoundException(`Route #${id} not found`);
+    }
+    return route;
   }
 
   update(id: number, updateRouteDto: UpdateRouteDto) {

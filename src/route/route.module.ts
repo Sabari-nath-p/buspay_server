@@ -18,5 +18,6 @@ import { UserModule } from 'src/user/user.module';
   ],
   controllers: [RouteController],
   providers: [RouteService],
+  exports: [RouteService],
 })
 export class RouteModule {}
