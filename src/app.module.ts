@@ -19,6 +19,8 @@ import { StatesModule } from './states/states.module';
 import { RouteBusModule } from './route-bus/route-bus.module';
 import { TripsModule } from './trips/trips.module';
 import { CouponsModule } from './coupons/coupons.module';
+import { TicketsModule } from './tickets/tickets.module';
+import { GuardModule } from './common/guards/guard.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { CouponsModule } from './coupons/coupons.module';
     RouteBusModule,
     TripsModule,
     CouponsModule,
+    TicketsModule,
+    GuardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

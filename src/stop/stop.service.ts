@@ -25,8 +25,8 @@ export class StopService {
     return listData;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} stop`;
+  async findOne(id: number) {
+    return await this.stopRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateStopDto: UpdateStopDto) {

@@ -16,5 +16,6 @@ import { BusTypeModule } from 'src/bus-type/bus-type.module';
   ],
   controllers: [StopController],
   providers: [StopService],
+  exports: [StopService],
 })
 export class StopModule {}

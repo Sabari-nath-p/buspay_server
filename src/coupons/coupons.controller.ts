@@ -34,7 +34,7 @@ export class CouponsController {
   async findAll(@Query() filter) {
     const couponLIst = await this.couponsService.findAll(filter);
     return this.resposnseService.successResponse(
-      'New Coupon Created Sucessfully',
+      'Coupon list',
       200,
       couponLIst,
     );
@@ -43,11 +43,7 @@ export class CouponsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const coupon = await this.couponsService.findOne(+id);
-    return this.resposnseService.successResponse(
-      'New Coupon Created Sucessfully',
-      200,
-      coupon,
-    );
+    return this.resposnseService.successResponse('Coupon details', 200, coupon);
   }
 
   @Patch(':id')
@@ -55,7 +51,15 @@ export class CouponsController {
     @Param('id') id: string,
     @Body() updateCouponDto: UpdateCouponDto,
   ) {
-    return this.couponsService.update(+id, updateCouponDto);
+    const updatedCoupons = await this.couponsService.update(
+      +id,
+      updateCouponDto,
+    );
+    return this.resposnseService.successResponse(
+      'Coupon details updated',
+      200,
+      updatedCoupons,
+    );
   }
 
   @Delete(':id')

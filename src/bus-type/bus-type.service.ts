@@ -43,15 +43,28 @@ export class BusTypeService {
     return busTypes;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} busType`;
+  async findOne(id: number) {
+    const busType = await this.busTypeRepository.findOne({ where: { id } });
+    if (!busType) {
+      throw new NotFoundException('Bus Type Not Found');
+    }
+    return busType;
   }
 
-  update(id: number, updateBusTypeDto: UpdateBusTypeDto) {
-    return `This action updates a #${id} busType`;
+  async update(
+    id: number,
+    updateBusTypeDto: UpdateBusTypeDto,
+  ): Promise<BusType> {
+    const busType = await this.busTypeRepository.findOne({ where: { id } });
+    if (!busType) {
+      throw new NotFoundException(`BusType with ID ${id} not found`);
+    }
+    Object.assign(busType, updateBusTypeDto);
+    return await this.busTypeRepository.save(busType);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} busType`;
+  async remove(id: number) {
+    const busType = await this.findOne(id);
+    await this.busTypeRepository.delete(id);
   }
 }
