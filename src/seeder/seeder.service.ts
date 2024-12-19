@@ -122,7 +122,7 @@ export class SeederService {
 
   async SuperAdminSeeder() {
     const superUserEmail = await this.usersService.findUserByEmail(
-      'superadmin@buspay.com',
+      'superadmin@buspay.com',    
     );
     const superadminRole =
       await this.rolesService.findRoleByName('super_admin');

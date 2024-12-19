@@ -29,7 +29,7 @@ export class RouteService {
       relations: ['routeStop', 'district', 'routeBus', 'trips'],
     });
     if (!route) {
-      throw new NotFoundException(`Route #${id} not found`);
+      throw new NotFoundException(`Route not found`);
     }
     return route;
   }

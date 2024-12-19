@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeORMError } from 'typeorm';
@@ -9,15 +9,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { RoleModule } from 'src/role/role.module';
 import { ResponseModule } from 'src/common/response/response.module';
 import { BusModule } from 'src/bus/bus.module';
+import { GuardModule } from 'src/common/guards/guard.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     OtpModule,
-    JwtModule,
+    forwardRef(() => GuardModule),
     RoleModule,
     ResponseModule,
-    BusModule,
+    forwardRef(() => BusModule),
   ],
   controllers: [UserController],
   providers: [UserService],

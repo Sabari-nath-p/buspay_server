@@ -23,7 +23,7 @@ export class BusService {
     if (filter.owner_id) {
       where = { owner_id: filter.owner_id };
     }
-    return await this.busRepository.find({ where });
+    return await this.busRepository.find({ where, relations: ['preferences'] });
   }
 
   async findOne(id: number) {
@@ -51,8 +51,9 @@ export class BusService {
     return this.busRepository.save(bus);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} bus`;
+  async remove(id: number) {
+    const bus = await this.findOne(id);
+    await this.busRepository.delete(id);
   }
 
   save(bus: Bus) {
