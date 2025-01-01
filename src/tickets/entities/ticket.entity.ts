@@ -1,6 +1,7 @@
 import { BusType } from 'src/bus-type/entities/bus-type.entity';
 import { Coupon } from 'src/coupons/entities/coupon.entity';
 import { Stop } from 'src/stop/entities/stop.entity';
+import { TripTicket } from 'src/trips/entities/trip-tickets.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,6 +10,7 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('tickets')
@@ -65,4 +67,7 @@ export class Ticket {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @OneToMany(() => TripTicket, (tripTicket) => tripTicket.ticket)
+  tripTickets: TripTicket[];
 }

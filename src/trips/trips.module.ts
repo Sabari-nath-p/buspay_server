@@ -7,9 +7,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { BusModule } from 'src/bus/bus.module';
 import { RouteModule } from 'src/route/route.module';
+import { TripTicket } from './entities/trip-tickets.entity';
+import { TicketsModule } from 'src/tickets/tickets.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Trip]), JwtModule, UserModule,BusModule,RouteModule],
+  imports: [
+    TypeOrmModule.forFeature([Trip, TripTicket]),
+    JwtModule,
+    UserModule,
+    BusModule,
+    RouteModule,
+    TicketsModule,
+  ],
   controllers: [TripsController],
   providers: [TripsService],
 })

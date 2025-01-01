@@ -21,6 +21,7 @@ import { TripsModule } from './trips/trips.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { GuardModule } from './common/guards/guard.module';
+import { UserWalletModule } from './user-wallet/user-wallet.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { GuardModule } from './common/guards/guard.module';
     CouponsModule,
     TicketsModule,
     GuardModule,
+    UserWalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],
