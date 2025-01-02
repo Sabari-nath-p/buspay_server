@@ -29,7 +29,7 @@ export class RouteStopsController {
   async create(@Body() createRouteStopDto: CreateRouteStopDto) {
     const { stop_id, route_id } = createRouteStopDto;
     const stop = await this.stopService.findOne(stop_id);
-    if (stop) {
+    if (!stop) {
       throw new NotFoundException('Stop not found');
     }
     await this.routeService.findOne(stop_id);

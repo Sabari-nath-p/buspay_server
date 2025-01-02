@@ -10,10 +10,12 @@ import {
   BeforeInsert,
   OneToMany,
   ManyToMany,
+  OneToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Bus } from 'src/bus/entities/bus.entity';
 import { Trip } from 'src/trips/entities/trip.entity';
+import { UserWallet } from 'src/user-wallet/entities/user-wallet.entity';
 
 export enum UserStatusEnum {
   ACTIVE = 'active',
@@ -104,4 +106,7 @@ export class User {
 
   @OneToMany(() => Trip, (trip) => trip.conductor)
   trips: Trip[];
+
+  @OneToOne(() => UserWallet, (wallet) => wallet.user)
+  wallets: UserWallet[];
 }

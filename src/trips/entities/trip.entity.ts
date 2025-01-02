@@ -9,7 +9,9 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { TripTicket } from './trip-tickets.entity';
 
 export enum TripStatus {
   PLANNED = 'PLANNED',
@@ -39,6 +41,9 @@ export class Trip {
 
   @Column({ type: 'timestamp', nullable: true })
   ended_at: Date;
+
+  @OneToMany(() => TripTicket, (tripTicket) => tripTicket.trip)
+  tripTickets: TripTicket[];
 
   @Column({ type: 'enum', enum: TripStatus })
   status: TripStatus;

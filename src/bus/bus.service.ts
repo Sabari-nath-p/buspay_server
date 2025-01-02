@@ -29,7 +29,7 @@ export class BusService {
   async findOne(id: number) {
     const bus = await this.busRepository.findOne({
       where: { id },
-      relations: ['conductors', 'routeBus', 'owner'],
+      relations: ['conductors', 'routeBus', 'owner', 'preferences'],
     });
     if (!bus) {
       throw new NotFoundException('Bus Not Found');
