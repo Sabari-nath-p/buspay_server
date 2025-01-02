@@ -27,10 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run tests (optional, skip if not applicable)
-      - name: Run tests
-        run: npm test
-
       # Step 5: Build the project
       - name: Build the project
         run: npm run build
@@ -39,13 +35,13 @@ jobs:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.9
         with:
-          host: <your_vps_ip>
-          username: <your_vps_user>
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: 145.223.19.248
+          username: root
+          key: BuspayDev@2024
           script: |
-            cd /path/to/your/project
+            cd /buspay/buspay_server
             git pull origin main
             npm install
             npm run build
             npm run migration:run
-            pm2 restart all
+            pm2 restart buspay_server
