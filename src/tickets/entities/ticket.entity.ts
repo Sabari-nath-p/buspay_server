@@ -1,5 +1,6 @@
 import { BusType } from 'src/bus-type/entities/bus-type.entity';
 import { Coupon } from 'src/coupons/entities/coupon.entity';
+import { RouteStop } from 'src/route-stops/entities/route-stop.entity';
 import { Stop } from 'src/stop/entities/stop.entity';
 import { TripTicket } from 'src/trips/entities/trip-tickets.entity';
 import {
@@ -25,19 +26,19 @@ export class Ticket {
   @Column()
   bus_type_id: number;
 
-  @ManyToOne(() => Stop, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'boarding_stop_id' })
-  boardingStop: Stop;
+  @ManyToOne(() => RouteStop, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'boarding_route_stop_id' })
+  boardingRouteStop: RouteStop;
 
   @Column()
-  boarding_stop_id: number;
+  boarding_route_stop_id: number;
 
-  @ManyToOne(() => Stop, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'destination_stop_id' })
-  destinationStop: Stop;
+  @ManyToOne(() => RouteStop, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'destination_route_stop_id' })
+  destinationRouteStop: RouteStop;
 
   @Column()
-  destination_stop_id: number;
+  destination_route_stop_id: number;
 
   @Column('decimal', { precision: 10, scale: 2 })
   rate: number;

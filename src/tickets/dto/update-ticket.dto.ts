@@ -1,4 +1,15 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTicketDto } from './create-ticket.dto';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateTicketDto extends PartialType(CreateTicketDto) {}
+export class UpdatePaymentDto {
+  @IsNotEmpty()
+  @IsString()
+  razorpay_order_id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  razorpay_payment_id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  razorpay_signature: string;
+}
