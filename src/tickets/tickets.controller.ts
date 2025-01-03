@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  ParseIntPipe,
+  Put,
+} from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { UpdatePaymentDto } from './dto/update-ticket.dto';
 
 @Controller('tickets')
 export class TicketsController {
@@ -9,26 +18,27 @@ export class TicketsController {
 
   @Post()
   create(@Body() createTicketDto: CreateTicketDto) {
-    return this.ticketsService.create(createTicketDto);
+    return this.ticketsService.createTicket(createTicketDto);
   }
 
   @Get()
-  findAll() {
-    return this.ticketsService.findAll();
+  findAll(
+    @Query('page', new ParseIntPipe({ optional: true })) page = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit = 10,
+  ) {
+    return this.ticketsService.findAll(page, limit);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketsService.update(+id, updateTicketDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketsService.remove(+id);
+  @Put(':id/payment')
+  updatePaymentStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePaymentDto: UpdatePaymentDto,
+  ) {
+    return this.ticketsService.updatePaymentStatus(id, updatePaymentDto);
   }
 }

@@ -31,8 +31,8 @@ export class RouteStopsService {
     return await this.routeStopsRepository.find({ where });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} routeStop`;
+  async findOne(id: number) {
+    return await this.routeStopsRepository.findOne({ where: { id } });
   }
 
   async routeStopExistCheck(route_id: number, stop_id: number) {

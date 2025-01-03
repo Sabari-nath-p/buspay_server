@@ -16,5 +16,6 @@ import { RouteModule } from 'src/route/route.module';
   ],
   controllers: [RouteStopsController],
   providers: [RouteStopsService],
+  exports:[RouteStopsService]
 })
 export class RouteStopsModule {}

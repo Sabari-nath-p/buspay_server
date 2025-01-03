@@ -22,6 +22,8 @@ import { CouponsModule } from './coupons/coupons.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { GuardModule } from './common/guards/guard.module';
 import { UserWalletModule } from './user-wallet/user-wallet.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RazorpayModule } from './razorpay/razorpay.module';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { UserWalletModule } from './user-wallet/user-wallet.module';
       synchronize: false,
       autoLoadEntities: true,
     }),
+    EventEmitterModule.forRoot(),
     UserModule,
     SeederModule,
     OtpModule,
@@ -55,6 +58,7 @@ import { UserWalletModule } from './user-wallet/user-wallet.module';
     TicketsModule,
     GuardModule,
     UserWalletModule,
+    RazorpayModule,
   ],
   controllers: [AppController],
   providers: [AppService],
